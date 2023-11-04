@@ -1,5 +1,9 @@
-type operation = "plus" | "minus" | "divided" | "multiplied";
-type removeFromQuestion = "What" | "is";
+const isValidOp: {[key: string]: boolean} = {
+  "+": true,
+  "-": true,
+  "/": true,
+  "*": true
+};
 
 const isTypeOperation = (s: string): boolean => {
   if (s === "plus" 
@@ -9,15 +13,33 @@ const isTypeOperation = (s: string): boolean => {
     return true;
   }
   return false;
-}
+};
 
 const isTypeRemoveFromQuestion = (s: string): boolean => {
-  if (s === "What" || s === "is") {
-    return true;
+  return (s === "What" || s === "is") ? true : false;
+};
+
+const orderOpsLeftToRight = (equation: string[]): string[] => {
+  const newEquation = [...equation]
+  newEquation.splice(0, 0, "(");
+  newEquation.splice(4, 0, ")");
+  return newEquation;
+};
+
+const containsDoubleOps = (equation: string[]): boolean => {
+  for (let i=0; i<equation.length; i++) {
+    if (equation[i] === equation[i+1]) return true;
   }
   return false;
-}
+};
 
+const hasInvalidOps = (equation: string[]): boolean => {
+  for (let i=1; i<equation.length; i++) {
+    const elementIsNumber = !isNaN(Number(equation[i]));
+    if (!isValidOp[equation[i]] && !elementIsNumber) return true; 
+  }
+  return false;
+};
 
 export const answer = (question: string): number => {
   let questionWords: string[] = question
@@ -26,7 +48,7 @@ export const answer = (question: string): number => {
     .replaceAll("minus", "-")
     .replaceAll("multiplied by", "*")
     .replaceAll("divided by", "/")
-    .split(" ")
+    .split(" ");
 
   if (`${questionWords[0]} ${questionWords[1]}` !== "What is") throw new Error('Unknown operation');
 
@@ -42,14 +64,17 @@ export const answer = (question: string): number => {
       cleanedQuestionWords.push(element);
       return;
     } else {
-      console.log(`Element causes error ${element}`)
-      throw new Error("Syntax error")
+      throw new Error("Syntax error");
     }
   })
-  console.log(`Cleaned words: ${cleanedQuestionWords.join(" ")} length: ${cleanedQuestionWords.length}`)
+
+  if (containsDoubleOps(cleanedQuestionWords)) throw new Error("Syntax error");
+
+  const fixedOrderOfOps = orderOpsLeftToRight(cleanedQuestionWords);
   try {
-    return eval(cleanedQuestionWords.join(" "))
+    return eval(fixedOrderOfOps.join(" "));
   } catch (error) {
-    throw new Error("Syntax error")
+    if (hasInvalidOps(cleanedQuestionWords)) throw new Error("Unknown operation");
+    throw new Error("Syntax error");
   }
 }
