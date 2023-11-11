@@ -18,49 +18,44 @@ export class ComplexNumber {
   }
 
   public add(complexNumber: ComplexNumber): ComplexNumber {
-    const newImaginaryPart = complexNumber.complex.imaginary + this.complex.imaginary;
-    const newRealPart = complexNumber.complex.real + this.complex.real;
+    const newImaginaryPart = complexNumber.imag + this.imag;
+    const newRealPart = complexNumber.real + this.real;
     return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
   public sub(complexNumber: ComplexNumber): ComplexNumber {
-    const newImaginaryPart =  this.complex.imaginary - complexNumber.complex.imaginary;
-    const newRealPart =  this.complex.real - complexNumber.complex.real;
+    const newImaginaryPart =  this.imag - complexNumber.imag;
+    const newRealPart =  this.real - complexNumber.real;
     return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
-  // a = this.complex.real
-  // b = this.complex.imaginary
-  // c = complexNumber.complex.real
-  // d = complexNumber.complex.imaginary
-
   public div(complexNumber: ComplexNumber): ComplexNumber {
-    const a = this.complex.real
-    const b = this.complex.imaginary
-    const c = complexNumber.complex.real
-    const d = complexNumber.complex.imaginary
+    const a = this.real
+    const b = this.imag
+    const c = complexNumber.real
+    const d = complexNumber.imag
     const newImaginaryPart = (b * c - a * d)/(c ** 2 + d ** 2);
     const newRealPart = (a * c + b * d)/(c ** 2 + d ** 2);
     return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
   public mul(complexNumber: ComplexNumber): ComplexNumber {
-    const newImaginaryPart = this.complex.real * complexNumber.complex.imaginary + this.complex.imaginary * complexNumber.complex.real;
-    const newRealPart = this.complex.real * complexNumber.complex.real - this.complex.imaginary * complexNumber.complex.imaginary;
+    const newImaginaryPart = this.real * complexNumber.imag + this.imag * complexNumber.real;
+    const newRealPart = this.real * complexNumber.real - this.imag * complexNumber.imag;
     return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
   public get abs(): number {
-    const absValue = (this.complex.real ** 2 + this.complex.imaginary ** 2) ** 0.5
+    const absValue = (this.real ** 2 + this.imag ** 2) ** 0.5
     // console.log(absValue)
     return absValue;
   }
 
   public get conj(): ComplexNumber {
-    const newImaginaryPart = (this.complex.imaginary !== 0 ) ? -1 * this.complex.imaginary : 0;
-    const newRealPart = this.complex.real;
-    console.log(`imag: ${this.complex.imaginary}\nnew imag: ${newImaginaryPart}`)
-    console.log(`real: ${this.complex.real}\nnew real: ${newRealPart}`)
+    const newImaginaryPart = (this.imag !== 0 ) ? -1 * this.imag : 0;
+    const newRealPart = this.real;
+    console.log(`imag: ${this.imag}\nnew imag: ${newImaginaryPart}`)
+    console.log(`real: ${this.real}\nnew real: ${newRealPart}`)
     return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
