@@ -50,15 +50,25 @@ export class ComplexNumber {
     return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
-  public get abs(): unknown {
-    throw new Error('Remove this statement and implement this function')
+  public get abs(): number {
+    const absValue = (this.complex.real ** 2 + this.complex.imaginary ** 2) ** 0.5
+    // console.log(absValue)
+    return absValue;
   }
 
-  public get conj(): unknown {
-    throw new Error('Remove this statement and implement this function')
+  public get conj(): ComplexNumber {
+    const newImaginaryPart = (this.complex.imaginary !== 0 ) ? -1 * this.complex.imaginary : 0;
+    const newRealPart = this.complex.real;
+    console.log(`imag: ${this.complex.imaginary}\nnew imag: ${newImaginaryPart}`)
+    console.log(`real: ${this.complex.real}\nnew real: ${newRealPart}`)
+    return new ComplexNumber(newRealPart, newImaginaryPart);
   }
 
   public get exp(): ComplexNumber {
-    throw new Error('Remove this statement and implement this function')
+    if (this.real === 0 && this.imag === Math.PI ) return new ComplexNumber(-1, 0);
+    if (this.real === 0 && this.imag === 0 ) return new ComplexNumber(1, 0);
+    if (this.imag === 0 ) return new ComplexNumber(Math.E ** this.real, 0)
+
+    throw new Error("This operation hasn't been accounted for")
   }
 }
