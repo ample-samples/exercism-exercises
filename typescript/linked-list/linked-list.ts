@@ -1,4 +1,4 @@
-const VERBOSE_LOGS = true;
+const VERBOSE_LOGS = false;
 
 interface Node {
   next: Node | null,
@@ -20,13 +20,18 @@ export class LinkedList<TElement> {
   public push(element: TElement): TElement {
     // Add node to the end of the list
     const newNode = {next: null, prev: this.tail, element};
-    this.tail ?  this.tail.next = newNode : this.head = newNode;
+
+    if (this.tail) {
+      this.tail.next = newNode 
+    } else {
+      this.head = newNode;
+    }
 
     this.tail = newNode;
 
     this.length++;
 
-    if (VERBOSE_LOGS) {console.log(`push() => \nthis.head: `, this.head, `\nthis.tail:`, this.tail)}
+    if (VERBOSE_LOGS) {console.log("push() => \nthis.head: ", this.head, "\nthis.tail:", this.tail)}
     return element;
   }
 
@@ -35,24 +40,21 @@ export class LinkedList<TElement> {
     if (!this.tail) return null;
     const removedElement = this.tail.element;
 
-    this.tail.prev ? this.tail = this.head : this.tail = this.tail.prev 
+    this.tail = this.tail.prev ? this.head : this.tail.prev;
 
     this.length--;
 
-    if (this.length === 1) {
-      this.tail = this.head;
-    } else if (this.length === 0) {
+    if (this.length === 0) {
       this.head = null;
     }
 
-    if (VERBOSE_LOGS) {console.log(`pop() => \nthis.head: `, this.head, `\nthis.tail:`, this.tail)}
+    if (VERBOSE_LOGS) {console.log("pop() => \nthis.head: ", this.head, "\nthis.tail:", this.tail)}
     return removedElement;
   }
 
   public shift(): null | TElement {
     // Remove node at the beginning
     if (!this.head) return null;
-
 
     const removedElement = this.head.element;
 
@@ -62,7 +64,7 @@ export class LinkedList<TElement> {
 
     if (this.length === 0) { this.tail = null }
 
-    if (VERBOSE_LOGS) {console.log(`shift() => \nthis.head: `, this.head, `\nthis.tail:`, this.tail)}
+    if (VERBOSE_LOGS) {console.log("shift() => \nthis.head: ", this.head, "\nthis.tail:", this.tail)}
     return removedElement;
   }
 
@@ -70,57 +72,40 @@ export class LinkedList<TElement> {
     // Add node to the beginning
     const newNode = {next: this.head, prev: null, element} ;
 
-    this.head ? this.head.prev = newNode : this.tail = newNode;
+    if (this.head) {
+      this.head.prev = newNode 
+    } else {
+      this.tail = newNode;
+    }
 
     this.head = newNode;
 
     this.length++;
 
-    if (VERBOSE_LOGS) {console.log(`unshift() => \nthis.head: `, this.head, `\nthis.tail:`, this.tail)}
+    if (VERBOSE_LOGS) {console.log("unshift() => \nthis.head: ", this.head, "\nthis.tail:", this.tail)}
     return element;
   }
 
   public delete(element: TElement): void {
-    if (this.head === null) return 
+    let nodeToDelete: null | Node = null;
 
-    let workingNode ;
-    workingNode = this.head
-
-    let nodeToDelete: any;
-
-    while (workingNode !== null) {
-      if (workingNode.element === element) {
-        nodeToDelete = workingNode;
-        console.log({ nodeToDelete })
-        break;
-      }
-      workingNode = workingNode.next
+    for (let workingNode = this.head; workingNode !== null; workingNode = workingNode.next) {
+      if (workingNode.element === element) nodeToDelete = workingNode;
     }
 
-    if (!nodeToDelete) return;
+    if (nodeToDelete === null) return;
 
-    if (nodeToDelete === this.head && nodeToDelete === this.tail) {
-    // Element to delete is the only element
-      this.head = null;
-      this.tail = null;
-      this.length--;
-
-      return;
-    } else if (nodeToDelete === this.head) {
-    // Element to delete is the head
-      this.head = nodeToDelete.next;
-      nodeToDelete.next = null;
-      this.length--;
+    if (nodeToDelete === this.head) {
+    // Element to delete is the head or the only node in the list
+      this.shift();
 
       return;
     } else if (nodeToDelete === this.tail) {
     // Element to delete is the tail
-      this.tail = nodeToDelete.prev;
-      nodeToDelete.prev = null;
-      this.length--;
+      this.pop();
 
       return;
-    } else {
+    } else if (nodeToDelete.next !== null && nodeToDelete.prev !== null){
     // Element to delete is in the middle of the list
       nodeToDelete.next.prev = nodeToDelete.prev;
       nodeToDelete.prev.next = nodeToDelete.next;
@@ -128,6 +113,7 @@ export class LinkedList<TElement> {
 
       return;
     }
+    return;
   }
 
   public count(): number {
