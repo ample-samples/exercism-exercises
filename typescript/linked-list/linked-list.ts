@@ -1,14 +1,14 @@
 const VERBOSE_LOGS = false;
 
-interface Node {
-  next: Node | null,
-  prev: Node | null,
-  element: any
+interface Node<T> {
+  next: Node<T> | null,
+  prev: Node<T> | null,
+  element: T
 }
 
 export class LinkedList<TElement> {
-  head: null | Node;
-  tail: null | Node;
+  head: null | Node<TElement>;
+  tail: null | Node<TElement>;
   length: number;
 
   constructor() {
@@ -87,7 +87,7 @@ export class LinkedList<TElement> {
   }
 
   public delete(element: TElement): void {
-    let nodeToDelete: null | Node = null;
+    let nodeToDelete: null | Node<TElement> = null;
 
     for (let workingNode = this.head; workingNode !== null; workingNode = workingNode.next) {
       if (workingNode.element === element) nodeToDelete = workingNode;
