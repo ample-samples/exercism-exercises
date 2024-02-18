@@ -11,6 +11,7 @@ const allergiesLookup: { [key: string]: string } = {
 
 export class Allergies {
   allergenIndex: string;
+
   constructor(allergenIndex: number) {
     this.allergenIndex = allergenIndex
       .toString(2)
@@ -39,7 +40,6 @@ export class Allergies {
           return true;
       }
     }
-
     return false;
   }
 }
